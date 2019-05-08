@@ -1,0 +1,249 @@
+\documentclass[]{article}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{amsmath}
+
+%opening
+\title{Virtual model controller for the quadruped robot Guar\'a}
+\author{Antônio Bento Filho\\\dots}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a Virtual Model Controller \cite{pratt_virtual_1996} proposal for Guará robot. Virtual Model Control abstracts away the complexity of robot' 16 Degree of Freedom (DOF) joint space and allows behavior to be described using virtual components. A function is set up to partitions the virtual actuators force in to the virtual force components for each leg.
+\end{abstract}
+\section{Robot model}
+Figure \ref{fig:guarawolflegs} shows the robot walking with hind-leg one and three  and fore-leg two in support-stroke mode, and with fore-leg zero in flight mode. Each leg has four DOF: roll and pitch on hip, pitch on knee and ankle. 	
+\begin{figure}%[h]
+	\centering
+	\includegraphics[scale=0.5]{"../../../Arquivos enviados/GuaraWolfLegs"}
+	\caption{Reference frames and feet forces.}
+	\label{fig:guarawolflegs}
+\end{figure}
+\section{Virtual model}% math for 3 stance legs}
+
+Figure \ref{fig:guaravirtualactuators} shows robot's  parallel Virtual Model Reference Frames. Frame $B$ is the action frame, frames $A_i$ 
+are the reaction frames and frame $O$ is the reference frame. VA represents the conglomerate virtual model which is comprised of the individual virtual models $VA_i$. Frame $A$ is an imaginary construct which represents the reaction frame of the conglomerate virtual model.
+\begin{figure}%[h]
+	\centering
+	\includegraphics[scale=0.4]{"../../../Arquivos enviados/GuaraVirtualActuators"}
+	\caption{Reference frames and feet forces.}
+	\label{fig:guaravirtualactuators}
+\end{figure}
+Each leg is a sub-component with a generalized force which could be mapped to joint torques as follows:
+
+\begin{equation}
+\begin{bmatrix}
+	\vec{\tau}^1 \\
+	\vec{\tau}^2 \\
+	\vec{\tau}^3 \\
+\end{bmatrix}_{(12\times1)}
+=
+\begin{bmatrix}
+	^0(_B^{A1}J)^T  & 0 				& 0  				\\ 
+		0  			& ^0(_B^{A2}J)^T 	&   				\\ 
+		0 			& 0 				&^0(_B^{A3}J)^T 	\\ 
+\end{bmatrix}_{(12 \times 18)}
+\begin{bmatrix}
+	^0(_B^{A1}\vec{F}) 	\\
+	^0(_B^{A2}\vec{F}) 	\\
+	^0(_B^{A3}\vec{F})
+\end{bmatrix}_{(1 \times 18)}
+\label{eq:parallelVirtualModelEquation}
+\end{equation}
+where: $(\vec{\tau}^i)_{(4\times1)}$ are the joint torques vector of leg \textit{i}; $^0(_B^{A_i}J)^T_{(4\times6)}$ is the Jacobian matrix from the action frames $A_i$ to reference frame $B$; and $^0(_B^{A_i}\vec{F})_{6\times1}$ is the generalized force vector on robot's foot \textit{i}.\\
+\section{Gardner's Partitioned Force Set}
+In order to apply Virtual Model Control to parallel mechanisms, a solution to the force distribution problem is required \cite{torres_virtual_1996}.\\Parallel linkages are present in the robot and no unique solution exists for the force distribution corresponding to a specified trajectory. A function should be set to apply a number of constraints for a closed solution to the force distribution to be acquired. If the system has $n$ DOF and $m>n$ virtual path generalized force components then there will be $m-n$ redundant virtual forces. Some constraints will arise due to the inadmissibility of certain individual force directions, others from unactuated joints and others can be set as design DOF. We use Partitioned Actuator Set Control Technique (PASC)\cite{gardner_solution_1990} to specify constrained DOF equations for the $m-n$ redundant virtual forces.\\
+Since the action and reference frame are coincidental for all the legs, the vector sum of the individual generalized forces must equal the desired force:
+\begin{equation}
+\sum_{i=1}^{p} [^0(_B^{Ai}\vec{F})]=^0(_B^{A*}\vec{F})^T
+\label{eq:vectorSum}
+\end{equation}
+where $p$ is the number of legs in support-stroke mode. Our robot we'll have three sets of stance patterns with its corresponding not-in-stance leg swinging pattern. \\
+Once enough constraints have been determined, we will have a square invertible constraint matrix
+$K$, so that the constraints can be written in the form
+\begin{equation}
+\begin{bmatrix}
+^0(_B^{A*}\vec{F})	\\
+\vec{c}
+\end{bmatrix}
+=K
+\begin{bmatrix}
+^0(_B^{A1}\vec{F})	\\ 
+^0(_B^{A2}\vec{F})	\\ 
+^0(_B^{A3}\vec{F}) 	\\ 
+\end{bmatrix} \label{eq:gaitMatrix}
+\end{equation}
+We first partition the virtual forces into the Constrained Force Set (CFS), $f^{ib}$, and those not in
+the CFS $f^{ia}$, and rearrange Eq. \ref{eq:vectorSum} into the following form:
+\begin{equation}
+\begin{bmatrix}
+f_b^a		\\
+f_l^b		\\
+t_l^{1c}	\\
+t_l^{2c}	\\
+\vdots		\\
+t_l^{lc}	\\
+c_r
+\end{bmatrix}
+=
+\begin{bmatrix}
+	I_{d\times d}		&0_{d\times d}		&I_{d\times d}		&0_{d\times d}		&I_{d\times d}		&0_{d\times d} 	\\ 
+	0_{d\times d}		&I_{d\times d}		&0_{d\times d} 		&I_{d\times d}		&0_{d\times d}		&I_{d\times d} 	\\ 
+	J^{1a}_{d\times d}	&J^{1b}_{d\times d}	&0_{d\times d} 		&0_{d\times d}		&0_{d\times d}		&0_{d\times d} 	\\
+	0					&0					&J^{2a}_{d\times d}	&J^{2b}_{d\times d}	&0_{d\times d}		&0_{d\times d}	\\ 
+	0					&0					&0					&0					&J^{3a}_{d\times d}	&J^{3b}_{d\times d}\\ 
+	D^{1a}_{d\times d}	&D^{1b}_{d\times d}	&D^{2a}_{d\times d}	&D^{2b}_{d\times d}	&D^{3a}_{d\times d}	&D^{3b}_{d\times d}	
+\end{bmatrix}
+\begin{bmatrix}
+f_d^{1a} 	\\
+f_l^{1b} 	\\
+f_d^{2a}	\\
+f_l^{2b}	\\
+f_d^{3a} 	\\
+f_l^{3b} 	
+\end{bmatrix}
+\label{eq:parallelVirtualModelEquation}
+\end{equation}
+Each natural constraint row can be written as:
+\begin{equation}
+t^{ic}=J^{ia}f^{ia}+J^{ib}f^{ib}	
+\end{equation}
+Solving for $f^{ib}$,
+\begin{equation}
+	\label{eq:fib}	
+	f^{ib}=Q^if^{ia}+u_l
+\end{equation}
+where:
+\begin{eqnarray}
+Q^i=[-(J^{ib})^{-1}J^{ˆia}]_{3\times3}	\\	
+u_l=\sum_{i=1}(J^{ib})^{-1}t^{ic}			
+\end{eqnarray}
+We expand the design constraint equations as:
+\begin{equation}
+c_3=\sum_{i=1}[D^{ia}+D^{ib}Q^i]f^{ia}+\sum_{i=1}D^{ib}(J^{ib})^{-1}t^{ic}
+\label{eq:c3}
+\end{equation}
+and separate $f^{ia}$ and $t^{ic}$ terms: 
+\begin{eqnarray}
+\label{eq:Si}
+S^i=[D^{ia}+D^{ib}Q^i]	\\
+\label{eq:v3S}
+v_3=\sum_{i=1}D^{ib}(J^{ib})^{-1}t^{ic}	
+\end{eqnarray}
+We can substitute ($f^{ib}$) back into Eq. \ref{eq:parallelVirtualModelEquation} to get a reduced set of equations,
+\begin{equation}
+\begin{bmatrix}
+f_d^a			\\
+f_l^{b}-u_l	\\
+c_r-v_r
+\end{bmatrix}
+=
+\begin{bmatrix}
+I_{(d\times d)}	&I_{(d\times d)}	&I_{(d\times d)}	\\ 
+Q^1				&Q^2			&Q^3			\\
+S^1				&S^2			&S^3			\\
+\end{bmatrix}
+\begin{bmatrix}
+f_d^{1a} 	\\
+f_d^{2a}	\\
+f_d^{3a} 	
+\end{bmatrix}
+\label{eq:parallelVirtualModelEquationReduced}
+\end{equation}
+To further reduce the size of the matrix, we can eliminate the
+Redundant Force Set (RFS), $f^r$ , in terms of the Minimum Force Set, $f^m$.
+\section{Robot' virtual model math}
+\subsection{Three-legs stance math}
+%Figure \ref{fig:guarawolflegs} shows robot in three-legs stance-push mode. It's suppose to support robot boby and walk straight ahead. Applying Newton's second law:
+%\begin{equation}
+%-\vec{F}+\sum^{n_{legs}}_{i=1}f^i-\sum^{n_{seg}}_{i=1} m_i\,g-m_B\,g=(\sum^{n_{seg}}_{i=1} m_i\,+m_B)\,a^B
+%\end{equation}
+%where $n_{legs}=3$ are the legs in stance-push mode, each with four leg's segments;  summing $n_{seg}=9$ components; each component mass and inertia being $m_j$ and $I_j$, $j=1\dots 10$. Feet retractions are $_{Ai}^B\vec{F}$, $i=1\dots6$ with $3$ constraints for no torques at the feet.
+\begin{itemize}
+	\item $n=6$: dimension of the generalized force to be applied;
+	\item $p=?$: number of serial paths of the parallel virtual actuator;
+	\begin{itemize}
+		\item $p=$3: virtual math for statically stable walking; each pattern of three possible footholds should have it's own virtual math?
+		\item $p=4$: virtual math for all legs in support pushing robot's body;
+	\end{itemize}
+	\item $l=3$: constraints of no torque in each serial path (point feet);
+	\item $d=n-l=3$: number of non-constrained DOF per serial path;
+	\item $r=p*d-n$: number of redundant serial path vistual force actuators
+	\begin{itemize}
+		\item $r=3$: for statically stable walking with 3 legs in support;
+		\item $r=6$: for pushing robot's body with 4 legs in support;
+	\end{itemize}
+\end{itemize}
+\subsection{Parallel virtual model} 
+%\begin{figure}
+%	\centering
+%	\includegraphics[scale=0.5]{"../../../Arquivos enviados/GuaraWolfLegs"}
+%	\caption{Reference frames and feet forces.}
+%	\label{fig:guarawolf3legs}
+%\end{figure}
+\begin{eqnarray}
+\vec{F^i}=[f^i_x,f^i_y,f^i_z]^T	\\
+\vec{r^i}=[x_i,y_i,z_i]^T	\\
+\vec{M}^i=\sum_{i=1}\vec{r^i}\times\vec{F^i}=\sum_{i=1}
+\begin{bmatrix}
+y^if^{zi}-z^if^{yi}	\\
+z^if^{xi}-x_if{zi}	\\
+x^if^{yi}-y^if^{xi}
+\end{bmatrix}
+\end{eqnarray}
+\begin{eqnarray}
+\begin{bmatrix}	\label{eq:equilibriumThreeLegs}
+F_x	\\
+F_y	\\
+F_z	\\
+\tau_x	\\
+\tau_y	\\
+\tau_z
+\end{bmatrix}
+=
+\begin{bmatrix}
+1		&0		&0		&1		&0		&0		&1		&0		&0	\\
+0		&1		&0		&0		&1		&0		&0		&1		&0	\\
+0		&0		&1		&0		&0		&1		&0		&0		&1	\\
+0		&-z^1	&y^1	&0		&-z^2	&y^2	&0		&-z^3	&y^3\\
+z^1		&0		&-x^1	&z^2	&0		&-x^2	&z^3	&0		&x^3\\
+-y^1		&x^1	&0		&-y^2	&x^2	&0		&-y^3	&x^3		&0	\\
+\end{bmatrix}
+\begin{bmatrix}
+f^{x1}	\\
+f^{y1}	\\
+f^{z1}	\\
+f^{x2}	\\
+f^{y2}	\\
+f^{z2}	\\
+f^{x3}	\\
+f^{y3}	\\
+f^{z3}	\\
+\end{bmatrix}
+\end{eqnarray}
+Equation (\ref{eq:equilibriumThreeLegs}) can be rewritten as:
+\begin{eqnarray}
+\begin{bmatrix}
+\vec{F}\\
+\vec{\tau}
+\end{bmatrix}
+=
+\begin{bmatrix}
+I_{3\times3}	&I_{3\times3}	&I_{3\times3}	\\
+s(r^1)	&s(r^2)	&s(r^3)
+\end{bmatrix}
+\begin{bmatrix}
+f^1	\\
+f^2	\\
+f^3
+\end{bmatrix}
+\end{eqnarray}
+where $I_{3\times3}$ is the order three identity matrix and $s^i=s(r^i)$ is the skew symmetric operator applied to $r^i$. 
+
+\bibliographystyle{IEEEtran}
+\bibliography{IcIHMCGuara}
+\end{document}
+
