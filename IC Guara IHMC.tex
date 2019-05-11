@@ -15,7 +15,7 @@
 We present a Virtual Model Controller \cite{pratt_virtual_1996} proposal for Guará robot. Virtual Model Control abstracts away the complexity of robot' 16 Degree of Freedom (DOF) joint space and allows behavior to be described using virtual components. A function is set up to partitions the virtual actuators force in to the virtual force components for each leg.
 \end{abstract}
 \section{Robot Virtual Model Math}
-Figure \ref{fig:guarawolflegs} shows the robot walking with hind-leg one and three  and fore-leg two in support-stroke mode, and with fore-leg zero in flight mode. Each leg has four DOF: roll and pitch on hip, pitch on knee and ankle. 	
+Figure \ref{fig:guarawolflegs} shows the robot walking with hind-leg one and three  and fore-leg two in support-stroke mode, and with fore-leg zero in flight mode. Each leg has four DOF: roll and pitch on hip, pitch on knee and ankle. Reference frames are the reaction frame $B$ which origin is on the robot's center of mass (CoM) and the action frames $A_i$ on robot's feet.	
 \begin{figure}%[h]
 	\centering
 	\includegraphics[scale=0.5]{"Figuras/GuaraWolfLegs"}
@@ -31,29 +31,59 @@ To swing the foot for a new stance-push positions, we map the generalized force 
 		\tau_3^i	\\
 		\tau_4^i	
 	\end{bmatrix}
-	=J^T
+	=
+	\begin{bmatrix}
+		\begin{bmatrix}
+			J_{p1}
+		\end{bmatrix}
+		\begin{bmatrix}
+			J_{p2}
+		\end{bmatrix}
+		\begin{bmatrix}
+			J_{p3}
+		\end{bmatrix}
+		\begin{bmatrix}
+			J_{p4}
+		\end{bmatrix}
+	\end{bmatrix}^T	
 	\begin{bmatrix}
 	f_x^i 	\\
-	f_y^y 	\\
+	f_y^i 	\\
 	f_z^i	\\
 	\end{bmatrix}
 \end{equation} 
 where:\\
-$\left[ \begin {array}{ccc} 1/2\,c_{{1234}}+1/2\,c_{{124\,{\it m3}}}-s
-_{{3}}s_{{124}}&1/2\,s_{{1234}}+1/2\,s_{{124\,{\it m3}}}+s_{{3}}c_{{
-		124}}&0\\ \noalign{\medskip}0&0&s_{{1}} \left( -1/2\,c_{{1234}}-1/2\,c
-_{{124\,{\it m3}}}+s_{{3}}s_{{124}} \right) +c_{{1}} \left( 1/2\,s_{{
-		1234}}+1/2\,s_{{124\,{\it m3}}}+s_{{3}}c_{{124}} \right) 
-\\ \noalign{\medskip}0&0&s_{{12}} \left( -1/2\,c_{{1234}}-1/2\,c_{{124
-		\,{\it m3}}}+s_{{3}}s_{{124}}-a_{{2}}s_{{2}} \right) +c_{{12}} \left( 
-1/2\,s_{{1234}}+1/2\,s_{{124\,{\it m3}}}+s_{{3}}c_{{124}}-a_{{2}}c_{{2
-}} \right) \\ \noalign{\medskip}0&0&s_{{123}} \left( -1/2\,c_{{1234}}-
-1/2\,c_{{124\,{\it m3}}}+s_{{3}}s_{{124}}-a_{{2}}\sin \left( \theta_{{
-		3}}+\theta_{{2}} \right) -a_{{3}}\sin \left( \theta_{{3}} \right) 
-\right) +c_{{123}} \left( 1/2\,s_{{1234}}+1/2\,s_{{124\,{\it m3}}}+s_
-{{3}}c_{{124}}-a_{{2}}\cos \left( \theta_{{3}}+\theta_{{2}} \right) -a
-_{{3}}\cos \left( \theta_{{3}} \right)  \right) \end {array} \right]$ 
-
+\begin{equation}
+J_{p1}=
+ \left[ \begin {array}{c} 1/2\,c_{{1234}}+1/2\,c_{{1243}}-s_{
+	{3}}s_{{124}}\\ \noalign{\medskip}1/2\,s_{{1234}}+1/2\,s_{{1243}}+s_{{3}}c_{{124}}\\ \noalign{\medskip}0\end {array} \right] 
+\end{equation}
+\begin{equation}
+	J_{p2}=
+	 \left[ \begin {array}{c} 0\\ \noalign{\medskip}0\\ \noalign{\medskip}
+		s_{{1}} ( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{124}} ) + \right. \\ \qquad\qquad \left. c_{{1}} \left( 1/2\,s_{{1234}}+1/2\,s_{{1243}}
+		+s_{{3}}c_{{124}} \right) \end {array} \right] 
+\end{equation}
+\begin{equation}
+	J_{p3}=
+	\left[ \begin {array}{c} 0\\ \noalign{\medskip}0\\ \noalign{\medskip}
+	s_{{12}} \left( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{
+			124}}-\right.\\
+		\qquad\qquad
+		\left.a_{{2}}s_{{2}} \right) +c_{{12}} \left( 1/2\,s_{{1234}}+1/2\,s_{
+		{124\,{\it m3}}}+s_{{3}}c_{{124}}-a_{{2}}c_{{2}} \right) \end {array}
+	\right] 
+\end{equation}
+\begin{equation}
+	J_{p4}=
+	\left[ \begin {array}{c} 0\\ \noalign{\medskip}0\\ \noalign{\medskip}
+	s_{{123}} \left( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{
+			124}}-a_{{2}}\sin \left( \theta_{{3}}+\theta_{{2}} \right) -a_{{3}}
+	\sin \left( \theta_{{3}} \right)  \right) + \right. \\ \qquad\qquad \left. c_{{123}} \left( 1/2\,s_{{
+			1234}}+1/2\,s_{{1243}}+s_{{3}}c_{{124}}-a_{{2}}\cos \left( 
+	\theta_{{3}}+\theta_{{2}} \right) -a_{{3}}\cos \left( \theta_{{3}}
+	\right)  \right) \end {array} \right]
+\end{equation}
 \subsection{Stance Feet Math}
 Figure \ref{fig:guaravirtualactuators} shows robot's  parallel Virtual Model Reference Frames. Frame $B$ is the action frame, frames $A_i$ 
 are the reaction frames and frame $O$ is the reference frame. VA represents the conglomerate virtual model which is comprised of the individual virtual models $VA_i$. Frame $A$ is an imaginary construct which represents the reaction frame of the conglomerate virtual model.
@@ -75,15 +105,83 @@ Each leg is a sub-component with a generalized force which could be mapped to jo
 	^0(_B^{A1}J)^T  & 0 				& 0  				\\ 
 		0  			& ^0(_B^{A2}J)^T 	&   				\\ 
 		0 			& 0 				&^0(_B^{A3}J)^T 	\\ 
-\end{bmatrix}_{(12 \times 18)}
+\end{bmatrix}_{(12 \times 9)}
 \begin{bmatrix}
 	^0(_B^{A1}\vec{F}) 	\\
 	^0(_B^{A2}\vec{F}) 	\\
 	^0(_B^{A3}\vec{F})
-\end{bmatrix}_{(1 \times 18)}
+\end{bmatrix}_{(1 \times 9)}
 \label{eq:parallelVirtualModelEquation}
 \end{equation}
-where: $(\vec{\tau}^i)_{(4\times1)}$ are the joint torques vector of leg \textit{i}; $^0(_B^{A_i}J)^T_{(4\times6)}$ is the Jacobian matrix from the action frames $A_i$ to reference frame $B$; and $^0(_B^{A_i}\vec{F})_{6\times1}$ is the generalized force vector on robot's foot \textit{i}.\\
+where: $(\vec{\tau}^i)_{(4\times1)}$ are the joint torques vector of leg \textit{i}; $^0(_B^{A_i}J)^T_{(4\times 3)}$ is a Jacobian sub matrix from the action frames $A_i$ to reference frame $B$, for zero torques on the feet; and $^0(_B^{A_i}\vec{F})_{3\times1}=[f_x^i,f_y^i,f_z^i]^T$ is the reaction force vector \textit{i} for zero torques on robot's feet.\\
+The torque from foot $i$ to $B$ reference frame origin is:
+\begin{eqnarray}
+\vec{M}^i=%\sum_{i=1} [^0(_B^{A_i}\vec{r})]\times^0(_B^{A_i}\vec{F})=\sum_{i=1}
+%\begin{bmatrix}
+%y_if^{zi}-z_if^{yi}	\\
+%z_if^{xi}-x_if^{zi}	\\
+%x_if^{yi}-y_if^{xi}
+%\end{bmatrix}
+%=
+\begin{bmatrix}
+S(^0(_B^{A_i}\vec{r}))
+\end{bmatrix}
+%\begin{bmatrix}
+\{^0(_B^{A_i}\vec{F})\}
+%\end{bmatrix}
+%s(^0(_B^{A_i}\vec{r}))\,^0(_B^{A_i}\vec{F})
+\label{eq:equilibrium}
+\end{eqnarray}
+where $S(^0(_B^{A_i}\vec{r}))_{3 \times 3}$ is the skew symmetric operator applied to $^0(_B^{A_i}\vec{r})$ position vector.\\
+With torques from Eq. \ref{eq:equilibrium}, robot's equilibrium equation is then:
+%\begin{eqnarray}
+%\begin{bmatrix}	\label{eq:equilibriumThreeLegs}
+%F_x	\\
+%F_y	\\
+%F_z	\\
+%\tau_x	\\
+%\tau_y	\\
+%\tau_z
+%\end{bmatrix}
+%=
+%\begin{bmatrix}
+%1		&0		&0		&1		&0		&0		&1		&0		&0	\\
+%0		&1		&0		&0		&1		&0		&0		&1		&0	\\
+%0		&0		&1		&0		&0		&1		&0		&0		&1	\\
+%0		&-z^1	&y^1	&0		&-z^2	&y^2	&0		&-z^3	&y^3\\
+%z^1		&0		&-x^1	&z^2	&0		&-x^2	&z^3	&0		&x^3\\
+%-y^1		&x^1	&0		&-y^2	&x^2	&0		&-y^3	&x^3		&0	\\
+%\end{bmatrix}
+%\begin{bmatrix}
+%f^{x1}	\\
+%f^{y1}	\\
+%f^{z1}	\\
+%f^{x2}	\\
+%f^{y2}	\\
+%f^{z2}	\\
+%f^{x3}	\\
+%f^{y3}	\\
+%f^{z3}	\\
+%\end{bmatrix}
+%\end{eqnarray}
+%Equation (\ref{eq:equilibriumThreeLegs}) can be rewritten as:
+\begin{eqnarray}
+\begin{bmatrix}
+\vec{F}\\
+\vec{\tau}
+\end{bmatrix}
+=
+\begin{bmatrix}
+I_{3\times3}	&I_{3\times3}	&I_{3\times3}	\\
+S(^0(_B^{A_1}\vec{r}))	&S(^0(_B^{A_2}\vec{r}))	&S(^0(_B^{A_3}\vec{r}))
+\end{bmatrix}
+\begin{bmatrix}
+f^1	\\
+f^2	\\
+f^3
+\end{bmatrix}
+\end{eqnarray}
+where $F$ and $\tau$ are the resultant force and torque at robot's center of mass (CoM) at $B$ reference frame origin $I_{3\times3}$ is the order three identity matrix.% and $f^i=[f_x^i,f_y^i,f_z^i]$. 
 \section{Gardner's Partitioned Force Set}
 In order to apply Virtual Model Control to parallel mechanisms, a solution to the force distribution problem is required \cite{torres_virtual_1996}.\\Parallel linkages are present in the robot and no unique solution exists for the force distribution corresponding to a specified trajectory. A function should be set to apply a number of constraints for a closed solution to the force distribution to be acquired. If the system has $n$ DOF and $m>n$ virtual path generalized force components then there will be $m-n$ redundant virtual forces. Some constraints will arise due to the inadmissibility of certain individual force directions, others from unactuated joints and others can be set as design DOF. We use Partitioned Actuator Set Control Technique (PASC)\cite{gardner_solution_1990} to specify constrained DOF equations for the $m-n$ redundant virtual forces.\\
 Since the action and reference frame are coincidental for all the legs, the vector sum of the individual generalized forces must equal the desired force:
@@ -110,7 +208,7 @@ We first partition the virtual forces into the Constrained Force Set (CFS), $f^{
 the CFS $f^{ia}$, and rearrange Eq. \ref{eq:vectorSum} into the following form:
 \begin{equation}
 \begin{bmatrix}
-f_b^a		\\
+f_d^a		\\
 f_l^b		\\
 t_l^{1c}	\\
 t_l^{2c}	\\
@@ -208,70 +306,7 @@ Redundant Force Set (RFS), $f^r$ , in terms of the Minimum Force Set, $f^m$.
 	\end{itemize}
 \end{itemize}
 \subsection{Parallel virtual model} 
-%\begin{figure}
-%	\centering
-%	\includegraphics[scale=0.5]{"../../../Arquivos enviados/GuaraWolfLegs"}
-%	\caption{Reference frames and feet forces.}
-%	\label{fig:guarawolf3legs}
-%\end{figure}
-\begin{eqnarray}
-\vec{F^i}=[f^i_x,f^i_y,f^i_z]^T	\\
-\vec{r^i}=[x_i,y_i,z_i]^T	\\
-\vec{M}^i=\sum_{i=1}\vec{r^i}\times\vec{F^i}=\sum_{i=1}
-\begin{bmatrix}
-y^if^{zi}-z^if^{yi}	\\
-z^if^{xi}-x_if{zi}	\\
-x^if^{yi}-y^if^{xi}
-\end{bmatrix}
-\end{eqnarray}
-\begin{eqnarray}
-\begin{bmatrix}	\label{eq:equilibriumThreeLegs}
-F_x	\\
-F_y	\\
-F_z	\\
-\tau_x	\\
-\tau_y	\\
-\tau_z
-\end{bmatrix}
-=
-\begin{bmatrix}
-1		&0		&0		&1		&0		&0		&1		&0		&0	\\
-0		&1		&0		&0		&1		&0		&0		&1		&0	\\
-0		&0		&1		&0		&0		&1		&0		&0		&1	\\
-0		&-z^1	&y^1	&0		&-z^2	&y^2	&0		&-z^3	&y^3\\
-z^1		&0		&-x^1	&z^2	&0		&-x^2	&z^3	&0		&x^3\\
--y^1		&x^1	&0		&-y^2	&x^2	&0		&-y^3	&x^3		&0	\\
-\end{bmatrix}
-\begin{bmatrix}
-f^{x1}	\\
-f^{y1}	\\
-f^{z1}	\\
-f^{x2}	\\
-f^{y2}	\\
-f^{z2}	\\
-f^{x3}	\\
-f^{y3}	\\
-f^{z3}	\\
-\end{bmatrix}
-\end{eqnarray}
-Equation (\ref{eq:equilibriumThreeLegs}) can be rewritten as:
-\begin{eqnarray}
-\begin{bmatrix}
-\vec{F}\\
-\vec{\tau}
-\end{bmatrix}
-=
-\begin{bmatrix}
-I_{3\times3}	&I_{3\times3}	&I_{3\times3}	\\
-s(r^1)	&s(r^2)	&s(r^3)
-\end{bmatrix}
-\begin{bmatrix}
-f^1	\\
-f^2	\\
-f^3
-\end{bmatrix}
-\end{eqnarray}
-where $I_{3\times3}$ is the order three identity matrix and $s^i=s(r^i)$ is the skew symmetric operator applied to $r^i$. 
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{IcIHMCGuara}
