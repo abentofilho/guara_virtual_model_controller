@@ -14,7 +14,7 @@
 \begin{abstract}
 We present a Virtual Model Controller \cite{pratt_virtual_1996} proposal for Guará robot. Virtual Model Control abstracts away the complexity of robot' 16 Degree of Freedom (DOF) joint space and allows behavior to be described using virtual components. A function is set up to partitions the virtual actuators force in to the virtual force components for each leg.
 \end{abstract}
-\section{Robot model}
+\section{Robot Virtual Model Math}
 Figure \ref{fig:guarawolflegs} shows the robot walking with hind-leg one and three  and fore-leg two in support-stroke mode, and with fore-leg zero in flight mode. Each leg has four DOF: roll and pitch on hip, pitch on knee and ankle. 	
 \begin{figure}%[h]
 	\centering
@@ -22,8 +22,39 @@ Figure \ref{fig:guarawolflegs} shows the robot walking with hind-leg one and thr
 	\caption{Reference frames and feet forces.}
 	\label{fig:guarawolflegs}
 \end{figure}
-\section{Virtual model}% math for 3 stance legs}
+\subsection{Swing Foot Math}
+To swing the foot for a new stance-push positions, we map the generalized force  $^0(_B^{A_i}\vec{F})$ on foot $i$ being swung to its leg's torques as follows:
+\begin{equation}
+	\begin{bmatrix}
+		\tau_1^i 	\\
+		\tau_2^i	\\
+		\tau_3^i	\\
+		\tau_4^i	
+	\end{bmatrix}
+	=J^T
+	\begin{bmatrix}
+	f_x^i 	\\
+	f_y^y 	\\
+	f_z^i	\\
+	\end{bmatrix}
+\end{equation} 
+where:\\
+$\left[ \begin {array}{ccc} 1/2\,c_{{1234}}+1/2\,c_{{124\,{\it m3}}}-s
+_{{3}}s_{{124}}&1/2\,s_{{1234}}+1/2\,s_{{124\,{\it m3}}}+s_{{3}}c_{{
+		124}}&0\\ \noalign{\medskip}0&0&s_{{1}} \left( -1/2\,c_{{1234}}-1/2\,c
+_{{124\,{\it m3}}}+s_{{3}}s_{{124}} \right) +c_{{1}} \left( 1/2\,s_{{
+		1234}}+1/2\,s_{{124\,{\it m3}}}+s_{{3}}c_{{124}} \right) 
+\\ \noalign{\medskip}0&0&s_{{12}} \left( -1/2\,c_{{1234}}-1/2\,c_{{124
+		\,{\it m3}}}+s_{{3}}s_{{124}}-a_{{2}}s_{{2}} \right) +c_{{12}} \left( 
+1/2\,s_{{1234}}+1/2\,s_{{124\,{\it m3}}}+s_{{3}}c_{{124}}-a_{{2}}c_{{2
+}} \right) \\ \noalign{\medskip}0&0&s_{{123}} \left( -1/2\,c_{{1234}}-
+1/2\,c_{{124\,{\it m3}}}+s_{{3}}s_{{124}}-a_{{2}}\sin \left( \theta_{{
+		3}}+\theta_{{2}} \right) -a_{{3}}\sin \left( \theta_{{3}} \right) 
+\right) +c_{{123}} \left( 1/2\,s_{{1234}}+1/2\,s_{{124\,{\it m3}}}+s_
+{{3}}c_{{124}}-a_{{2}}\cos \left( \theta_{{3}}+\theta_{{2}} \right) -a
+_{{3}}\cos \left( \theta_{{3}} \right)  \right) \end {array} \right]$ 
 
+\subsection{Stance Feet Math}
 Figure \ref{fig:guaravirtualactuators} shows robot's  parallel Virtual Model Reference Frames. Frame $B$ is the action frame, frames $A_i$ 
 are the reaction frames and frame $O$ is the reference frame. VA represents the conglomerate virtual model which is comprised of the individual virtual models $VA_i$. Frame $A$ is an imaginary construct which represents the reaction frame of the conglomerate virtual model.
 \begin{figure}%[h]
@@ -33,7 +64,6 @@ are the reaction frames and frame $O$ is the reference frame. VA represents the 
 	\label{fig:guaravirtualactuators}
 \end{figure}
 Each leg is a sub-component with a generalized force which could be mapped to joint torques as follows:
-
 \begin{equation}
 \begin{bmatrix}
 	\vec{\tau}^1 \\
