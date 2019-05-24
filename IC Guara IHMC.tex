@@ -5,7 +5,7 @@
 
 %opening
 \title{Virtual model controller for the quadruped robot Guar\'a}
-\author{Antônio Bento Filho\\\dots}
+\author{Ant\^onio Bento Filho\\\dots}
 
 \begin{document}
 
@@ -55,35 +55,46 @@ To swing the foot for a new stance-push positions, we map the generalized force 
 where:\\
 \begin{equation}
 J_{p1}=
- \left[ \begin {array}{c} 1/2\,c_{{1234}}+1/2\,c_{{1243}}-s_{
-	{3}}s_{{124}}\\ \noalign{\medskip}1/2\,s_{{1234}}+1/2\,s_{{1243}}+s_{{3}}c_{{124}}\\ \noalign{\medskip}0\end {array} \right] 
+\begin{bmatrix}
+ 	1/2\,c_{{1234}}+1/2\,c_{{1243}}-s_{{3}}s_{{124}}\\ 
+	1/2\,s_{{1234}}+1/2\,s_{{1243}}+s_{{3}}c_{{124}}\\
+	0
+\end{bmatrix} \nonumber
 \end{equation}
-\begin{equation}
-	J_{p2}=
-	 \left[ \begin {array}{c} 0\\ \noalign{\medskip}0\\ \noalign{\medskip}
-		s_{{1}} ( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{124}} ) + \right. \\ \qquad\qquad \left. c_{{1}} \left( 1/2\,s_{{1234}}+1/2\,s_{{1243}}
-		+s_{{3}}c_{{124}} \right) \end {array} \right] 
-\end{equation}
-\begin{equation}
-	J_{p3}=
-	\left[ \begin {array}{c} 0\\ \noalign{\medskip}0\\ \noalign{\medskip}
-	s_{{12}} \left( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{
-			124}}-\right.\\
-		\qquad\qquad
-		\left.a_{{2}}s_{{2}} \right) +c_{{12}} \left( 1/2\,s_{{1234}}+1/2\,s_{
-		{124\,{\it m3}}}+s_{{3}}c_{{124}}-a_{{2}}c_{{2}} \right) \end {array}
-	\right] 
-\end{equation}
-\begin{equation}
-	J_{p4}=
-	\left[ \begin {array}{c} 0\\ \noalign{\medskip}0\\ \noalign{\medskip}
-	s_{{123}} \left( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{
-			124}}-a_{{2}}\sin \left( \theta_{{3}}+\theta_{{2}} \right) -a_{{3}}
-	\sin \left( \theta_{{3}} \right)  \right) + \right. \\ \qquad\qquad \left. c_{{123}} \left( 1/2\,s_{{
-			1234}}+1/2\,s_{{1243}}+s_{{3}}c_{{124}}-a_{{2}}\cos \left( 
-	\theta_{{3}}+\theta_{{2}} \right) -a_{{3}}\cos \left( \theta_{{3}}
-	\right)  \right) \end {array} \right]
-\end{equation}
+$J_{p2}=$
+\begin{align*}
+	\begin{bmatrix}
+		0	\\	
+		0	\\
+		s_{{1}} ( -1/2\,c_{{1234}}-1/2\,c_{{124,3}}+s_{{3}}s_{{124}}
+		) +c_{{1}} ( 1/2\,s_{{1234}}\\+1/2\,s_{{124,3}}+s_{{3}}c_{{
+				124}} )
+	\end{bmatrix}_{(3\times1)}
+\end{align*}
+	$J_{p3}=$
+	\begin{align*}
+		\begin{bmatrix}
+			0	\\
+			0	\\
+			s_{{12}} ( -1/2\,c_{{1234}}-1/2\,c_{{124,3}}+s_{{3}}s_{{124}}-a_{{2}}s_{{2}})  +c_{{12}} ( 1/2\,s_{{1234}}\\+1/2\,s_{{124,3}}+s_{{3}}c_{{124}}-a_{{2}}c_{{2}} ) 
+		\end{bmatrix}_{(3\times1)}
+	\end{align*}
+	$J_{p4}=$
+\begin{align*}
+	\begin{bmatrix}
+		0\\ 
+		0\\ 
+		s_{{123}} ( -1/2\,c_{{1234}}-1/2\,c_{{1243}}+s_{{3}}s_{{		124}}-a_{{2}}s_{23} ) -a_{{3}}
+		s_3 ) ) + c_{{123}} ( 1/2\,s_{{
+		1234}}\\+1/2\,s_{{1243}}+s_{{3}}c_{{124}}-a_{{2}}c_{23} ) -a_{{3}}c_3
+		) )
+	\end{bmatrix}_{(3\times1)}
+\end{align*}
+where $s_i=\sin(\theta_i)$ and $c_i=\cos(\theta_i)$ and:
+\begin{eqnarray}
+	s_{(1234)}=\sin(\theta_1+\theta_2+\theta_3+\theta_4) \nonumber \\
+ 	c_{124,3}=\sin(\theta_1+\theta_2+\theta_4-\theta_3) \nonumber
+\end{eqnarray}
 \subsection{Stance Feet Math}
 Figure \ref{fig:guaravirtualactuators} shows robot's  parallel Virtual Model Reference Frames. Frame $B$ is the action frame, frames $A_i$ 
 are the reaction frames and frame $O$ is the reference frame. VA represents the conglomerate virtual model which is comprised of the individual virtual models $VA_i$. Frame $A$ is an imaginary construct which represents the reaction frame of the conglomerate virtual model.
