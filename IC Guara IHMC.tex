@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{amsmath}
+\usepackage{marvosym}
 
 %opening
 \title{Virtual model controller for the quadruped robot Guar\'a}
@@ -23,7 +24,7 @@ Figure \ref{fig:guarawolflegs} shows the robot walking with hind-legs one and th
 	\label{fig:guarawolflegs}
 \end{figure}
 \subsection{Swing Leg Math} 
-To swing the leg for new stance-push positions, we use leg's Jacobian \cite{craig_introduction_2009} transpose  from base frame $B$ to action frame $A_i$, $J^T$, to map the generalized force  $^0(_B^{A_i}\vec{F})$ on leg's foot $i$ being swung , to its leg's joint torques. 
+To swing the leg for new stance-push positions, we use leg's Jacobian \cite{craig_introduction_2009} transpose  from base frame $B$ to action frame $A_i$, $J^T$, to map the generalized force  $^0(_B^{A_i}\vec{F})$ on leg's foot $i$ being swung , to its leg's joint torques.
 \begin{equation}
 	\begin{bmatrix}
 		\tau_1^i 	\\
@@ -31,93 +32,102 @@ To swing the leg for new stance-push positions, we use leg's Jacobian \cite{crai
 		\tau_3^i	\\
 		\tau_4^i	
 	\end{bmatrix}
-	=
+	= 
 	\begin{bmatrix}
-		\begin{bmatrix}
-			J_{p1}	\\J_{o1}
-		\end{bmatrix}
-		\begin{bmatrix}
-			J_{p2}	\\J_{o2}	
-		\end{bmatrix}
-		\begin{bmatrix}
-			J_{p3}	\\J_{o3}
-		\end{bmatrix}
-		\begin{bmatrix}
-			J_{p4}	\\J_{o4}
-		\end{bmatrix}
-	\end{bmatrix}^T	
+		J_{p_i}\\	J_{o_i}
+	\end{bmatrix}
 	\begin{bmatrix}
-	f_x^i 	\\
-	f_y^i 	\\
-	f_z^i	\\
+		^0(_A{_i}F^B)	\\
 	\end{bmatrix}
 \end{equation} 
-where:\\
+where $J_p$ and $J_o$ are the linear and angular velocity components of the leg Jacobian from frame $B$ to foot frame $A_i$ and $^0(_B^{A_i}\vec{F})=[f_{x_i}\,f_{y_i}\,f_{z_i}\,n_{x_i}\,n_{y_i}\,n_{z_i}]^T$ is the generalized virtual force vector on the foot\\
+Each leg Jacobian from Eq. (\ref{eq:robotJacobian}) is given by:\cite{craig_introduction_2009}
 \begin{equation}
-J_{p1}=
+J_{p_1}=
 \begin{bmatrix}
-	-a_{{2}}s_{{\lambda_{{1}}}}-a_{{3}}s_{{
-		\delta_{{1}}}}-a_{{4}}s_{{4}}\\ 
-	a_{{2}}c_{{\epsilon_
-		{{1}}}}+a_{{3}}c_{{\delta_{{1}}}}+a_{{4}}c_{{4}}\\ 
-	0
+-a_{{2}}s_{{\lambda_{{1}}}}-a_{{3}}s_{{
+		\delta_{{1}}}}-a_{{4}}s_{{4}} 	\\
+a_{{2}}c_{{\epsilon_
+		{{1}}}}+a_{{3}}c_{{\delta_{{1}}}}+a_{{4}}c_{{4}} \\
+0	
 \end{bmatrix}, \nonumber
-\;J_{o1}=
+\;J_{o_1}=
 \begin{bmatrix}
-	0\\0\\1
+0\\0\\1
 \end{bmatrix}, \nonumber
 \end{equation}
 and \[s_4=\sin(\theta_4),\;c_4=\cos(\theta_4),\, s_{\lambda_{1}}=\sin(\theta_3+\theta_2+\theta_4),\]\[s_{\delta_{1}}=\sin(\theta_4+\theta_3),\;c_{\delta_{1}}=\cos(\theta_4+\theta_3),\;c_{\epsilon_{1}}=\cos(\theta_3+\theta_2+\theta_4);\]
 \begin{equation}
-	J_{p2}=
-	\begin{bmatrix}
-	0\\ 0\\ a_{{2}}c_{{\lambda_{{2}}}}+a_{{3}}c_{{\delta_{{2}}}}+a_{{4}}c_{{
-			\epsilon_{{21}}}} 
-	\end{bmatrix},
-	\;J_{o2}=
-	\begin{bmatrix}
-	s_1\\-c_1\\0
-	\end{bmatrix},\nonumber
+J_{p_2}=
+\begin{bmatrix}
+0\\ 0\\ a_{{2}}c_{{\lambda_{{2}}}}+a_{{3}}c_{{\delta_{{2}}}}+a_{{4}}c_{{
+		\epsilon_{{21}}}} 
+\end{bmatrix},
+\;J_{o_2}=
+\begin{bmatrix}
+s_1\\-c_1\\0
+\end{bmatrix},\nonumber
 \end{equation}
 and
 \[s_1=\sin(\theta1),\;c_1=\cos(\theta_1),\;c_{\lambda_2}=\cos(-\theta_4-\theta_3-\theta_2+\theta_1)\]
 \[c_{\delta_{2}}= \cos(-\theta_3-\theta_4+\theta_1),\; c_{\epsilon_2}=\cos(\theta_1-\theta_4);\]
 \begin{equation}
-	J_{p3}=
-	\begin{bmatrix}
-		0\\ 0\\
-		\left( c_{{\lambda_{{3}}}}-c_{{1}} \right) a_{{2}}+a_{{3}}c_{{\delta_
-				{{3}}}}+a_{{4}}c_{{\epsilon_{{3}}}} 
-		\end{bmatrix},
-	\;J_{o3}=
-	\begin{bmatrix}
-	s_{{\lambda_{{4}}}}\\ -c_{{\lambda_{{4}}}}\\ 0 
-	\end{bmatrix},\nonumber
+J_{p_3}=
+\begin{bmatrix}
+0\\ 0\\
+\left( c_{{\lambda_{{3}}}}-c_{{1}} \right) a_{{2}}+a_{{3}}c_{{\delta_
+		{{3}}}}+a_{{4}}c_{{\epsilon_{{3}}}} 
+\end{bmatrix},
+\;J_{o_3}=
+\begin{bmatrix}
+s_{{\lambda_{{4}}}}\\ -c_{{\lambda_{{4}}}}\\ 0 
+\end{bmatrix},\nonumber
 \end{equation}
 and 
 \[c_{\lambda_{3}}=\cos(-\theta_3-\theta_4+\theta_1),\; c_{\delta_{3}}=\cos(\theta_2+\theta_1-\theta_4-\theta_3)\] \[c_{\epsilon{3}}=\cos(\theta_2+\theta_1-\theta_4),\,s{\lambda_{4}}=\sin(\theta_2+\theta_1),\,c_{\lambda{4}}=\cos(\theta_2+\theta_1);\]
 \begin{equation}
-	J_{p4}=
-	\begin{bmatrix}
-	0\\ 0\\ \left( -c_{{1}}+c_{{\delta_{{5}}}} \right) a_{{2}}+ \left( -c_{{
+J_{p_4}=
+\begin{bmatrix}
+0\\ 0\\ \left( -c_{{1}}+c_{{\delta_{{5}}}} \right) a_{{2}}+ \left( -c_{{
 		\lambda_{{5}}}}+c_{{\epsilon_{{5}}}} \right) a_{{3}}+a_{{4}}c_{{\zeta_
 		{{5}}}} 
-	\end{bmatrix},\nonumber
-	\;J_{o4}=
-	\begin{bmatrix}
-		s_{{\lambda_{{6}}}}\\ -c_{{\lambda_{{6}}}}\\ 0 
-	\end{bmatrix},
+\end{bmatrix},\nonumber
+\;J_{o_4}=
+\begin{bmatrix}
+s_{{\lambda_{{6}}}}\\ -c_{{\lambda_{{6}}}}\\ 0 
+\end{bmatrix},
 \end{equation}
-and \[c_{\lambda_{5}}=\cos(\theta_2+\theta_1),\, c_{\delta_{5}}=\cos(\theta_1-\theta_4),\,\]\[c_{\epsilon_{5}}=\cos(\theta_2+\theta_1-\theta_4),\, c_{\zeta_{5}}=\cos(-\theta_4+\theta_3+\theta_2+\theta_1),\,\]\[s_{\lambda_{6}}=\sin(\theta_3+\theta_2+\theta_1),\,c_{\lambda_{6}}=\cos(\theta_3+\theta_2+\theta_1).\]
-\subsection{Stance Feet Math}
+and \[c_{\lambda_{5}}=\cos(\theta_2+\theta_1),\, c_{\delta_{5}}=\cos(\theta_1-\theta_4),\,\]\[c_{\epsilon_{5}}=\cos(\theta_2+\theta_1-\theta_4),\, c_{\zeta_{5}}=\cos(-\theta_4+\theta_3+\theta_2+\theta_1),\,\]\[s_{\lambda_{6}}=\sin(\theta_3+\theta_2+\theta_1),\,c_{\lambda_{6}}=\cos(\theta_3+\theta_2+\theta_1).\]\subsection{Stance Feet Math}
 Figure \ref{fig:guaravirtualactuators} shows robot's  parallel Virtual Model Reference Frames. Frame $B$ is the action frame, frames $A_i$ 
 are the reaction frames and frame $O$ is the reference frame. VA represents the conglomerate virtual model which is comprised of the individual virtual models $VA_i$. Frame $A$ is an imaginary construct which represents the reaction frame of the conglomerate virtual model.
-\begin{figure}%[h]
+\begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.4]{"Figuras/GuaraVirtualActuators"}
 	\caption{Reference frames and feet forces.}
 	\label{fig:guaravirtualactuators}
 \end{figure}
+\begin{equation}
+\begin{bmatrix}
+\tau_1^i 	\\
+\tau_2^i	\\
+\tau_3^i	\\
+\tau_4^i	
+\end{bmatrix}
+=\left[ \begin{array}{cccc}
+	[J_1]^T	& \MVZero	& \MVZero 	& \MVZero 	\\ 
+	\MVZero	& [J_2]^T		& \MVZero 	& \MVZero	\\
+	\MVZero	& \MVZero	& [J_3]^T		& \MVZero	\\
+	\MVZero & \MVZero	& \MVZero	& [J_4]^T		\\
+\end{array} \right]	\begin{bmatrix}
+_A{_1}F^B	\\
+_A{_2}F^B	\\
+_A{_3}F^B	\\
+_A{_4}F^B
+\end{bmatrix}\label{eq:robotJacobian}
+\end{equation} 
+where: \[J_i^T=\left[J_{pi}^T| J_{oi}^T\right]\] is the $i_{th}$ leg Jacobian transpose and \[^0(_B^{A_i}\vec{F})=[f_{x_i}\,f_{y_i}\,f_{z_i}\,n_{x_i}\,n_{y_i}\,n_{z_i}]^T \]\\
+is the generalized force vector on the foot.\\
+
 Each leg is a sub-component with a generalized force which could be mapped to joint torques as follows:
 \begin{equation}
 \begin{bmatrix}
