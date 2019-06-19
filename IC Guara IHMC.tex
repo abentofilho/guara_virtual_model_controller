@@ -15,7 +15,7 @@
 We present a Virtual Model Controller \cite{pratt_virtual_1996} proposal for Guará robot. Virtual Model Control abstracts away the complexity of robot' 16 Degree of Freedom (DOF) joint space and allows behavior to be described using virtual components. A function is set up to partitions the virtual actuators force in to the virtual force components for each leg.
 \end{abstract}
 \section{Robot Kinematics}%Virtual Model Math}
-Figure \ref{fig:guarawolflegs} shows the robot walking with hind-legs one and three  and fore-leg two, in support-stroke mode, and with fore-leg zero in flight mode.\\ Each leg has four DOF: roll and pitch on hip and pitch on knee and ankle. Reference frames are the reaction frame $B$ which origin is on the robot's center of mass (CoM) and the action frames $A_i$ on robot's feet.	
+Figure \ref{fig:guarawolflegs} shows the robot walking with hind-legs one and three  and fore-leg two in support-stroke mode, and with fore-leg zero in flight mode.\\ Each leg has four DOF: roll and pitch on hip and pitch on knee and ankle. Reference frames are: the reaction frame $B$ which origin is on the robot's center of mass (CoM) and the action frames $A_i$ on each robot's feet; $_A{_i}F^B$ is foot reaction force and $^0({_B^{A_i}r)}$ is foot position vector from $B$ reference frame. 	
 \begin{figure}%[h]
 	\centering
 	\includegraphics[scale=0.5]{"Figuras/GuaraWolfLegs"}
